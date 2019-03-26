@@ -1,16 +1,16 @@
 # airtable-easypost
 
-This will take Airtable rows and print labels using EasyPost. It'll also update records in Airtable to make sure you're not double printing.
+This will utilize Airtable has a database and print EasyPost shipping labels for you (in PNG) and print with whichever CUPS printer you're using.
 
-## Running
+## Instructions
 
-Prerequisite: Airtable, EasyPost, Node.js
+Prerequisite: Please have an Airtable account, EasyPost account, and Node.js installed
 
 * Install Node.js dependencies
 
       npm install
 
-1. You'll need to create a `.env` file with the following
+* You'll need to create a `.env` file with the following
 
       EASYPOST_API_KEY=
       AIRTABLE_ID=
@@ -23,15 +23,15 @@ Prerequisite: Airtable, EasyPost, Node.js
       FROM_STATE=
       FROM_ZIP=
 
-2. Find out what printer you want to use
+* Find out what printer you want to use
 
       lpstat -p -d
 
-3. Take that device name and add it into your `.env` file
+* Take that device name and add it into your `.env` file
 
       PRINTER_NAME=DYMO_LabelWriter_4XL
 
-4. Run the script to pull Airtable and create labels
+* Run the script to pull Airtable and create labels
 
       npm start
 
