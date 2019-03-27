@@ -139,7 +139,7 @@ var buyAndPrintShipmentLabel = function (shipment) {
 
 var airtableRequest = function (req) {
   req = _.defaults(req, {
-    baseUrl: 'https://api.airtable.com/v0/' + config.AIRTABLE_ID
+    baseUrl: 'https://api.airtable.com/v0/' + config.AIRTABLE_ID,
     headers: {},
     json: true
   })
