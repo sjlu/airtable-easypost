@@ -167,7 +167,6 @@ var getSwagRecords = function () {
   var requiredFields = [
     'Email',
     'Name',
-    'Company',
     'Street1',
     'City',
     'State',
