@@ -237,7 +237,8 @@ Promise
       street2: config.FROM_STREET2,
       city: config.FROM_CITY,
       state: config.FROM_STATE,
-      zip: config.FROM_ZIP
+      zip: config.FROM_ZIP,
+      country: config.FROM_COUNTRY
     }
   })
   .then(function () {
