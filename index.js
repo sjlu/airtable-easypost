@@ -6,6 +6,7 @@ var fs = Promise.promisifyAll(require('fs'))
 var childProcess = require('child_process')
 var os = require('os')
 var path = require('path')
+var {table} = require('table')
 var Easypost = require('@easypost/api')
 var config = require('./config')
 
@@ -53,8 +54,8 @@ var createAddress = function (address) {
 
 var createParcel = function () {
   var parcel = new easypost.Parcel({
-    predefined_package: 'Parcel',
-    weight: 16
+    predefined_package: 'Flat',
+    weight: 13
   })
   return parcel.save()
 }
@@ -120,7 +121,7 @@ var buyAndPrintShipmentLabel = function (shipment) {
     .resolve(shipment)
     .bind({})
     .then(function (shipment) {
-      return shipment.buy(shipment.lowestRate(['USPS'], ['ParcelSelect']))
+      return shipment.buy(shipment.lowestRate(['USPS']))
     })
     .then(function (results) {
       this.labelUrl = results.postage_label.label_url
@@ -228,6 +229,55 @@ var buyAndUpdate = function (record, shipment) {
     })
 }
 
+var confirmBuyAndUpdate = function (pack) {
+  return Promise
+    .bind({
+      pack: pack
+    })
+    .then(function () {
+      var record = this.pack.record
+      var rate = this.pack.shipment.lowestRate(['USPS'])
+      var address = this.pack.shipment.to_address
+
+      var tableData = [
+        [
+          'Email',
+          'Address',
+          'Service'
+        ],
+        [
+          `${record.email}`,
+          [
+            address.name,
+            _.compact([record.street1, record.street2]).join(', '),
+            `${record.city} ${record.state}, ${record.zip}`
+          ].join('\n'),
+          [
+            `${rate.carrier} ${rate.service}`,
+            `$${rate.rate}`
+          ].join('\n')
+        ]
+      ]
+
+      console.log(table(tableData))
+      return inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'confirm',
+          message: 'Are you sure you want to purchase this label?',
+          default: false
+        }
+      ])
+    })
+    .then(function (prompts) {
+      if (prompts && prompts.confirm) {
+        return buyAndUpdate(this.pack.record, this.pack.shipment)
+      }
+
+      return
+    })
+}
+
 Promise
   .bind({
     fromAddress: {
@@ -253,7 +303,7 @@ Promise
     concurrency: 1
   })
   .map(function (pack) {
-    return buyAndUpdate(pack.record, pack.shipment)
+    return confirmBuyAndUpdate(pack)
   }, {
     concurrency: 1
   })
