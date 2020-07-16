@@ -14,7 +14,7 @@
     "bluebird": "^3.7.2",
     "dotenv": "^7.0.0",
     "inquirer": "^7.0.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "request": "^2.88.2",
     "table": "^5.4.6"
   }
