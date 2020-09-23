@@ -54,7 +54,7 @@ var createAddress = function (address) {
 
 var createParcel = function () {
   var parcel = new easypost.Parcel({
-    predefined_package: 'Flat',
+    predefined_package: 'Parcel',
     weight: 13
   })
   return parcel.save()
