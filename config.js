@@ -6,9 +6,9 @@ dotenv.config()
 
 var config = {
   NODE_ENV: 'production',
-  EASYPOST_API_KEY: '',
-  AIRTABLE_ID: '',
-  AIRTABLE_API_KEY: '',
+  EASYPOST_API_KEY: null,
+  AIRTABLE_ID: null,
+  AIRTABLE_API_KEY: null,
   FROM_NAME: null,
   FROM_COMPANY: null,
   FROM_STREET1: null,
@@ -16,7 +16,9 @@ var config = {
   FROM_CITY: null,
   FROM_STATE: null,
   FROM_ZIP: null,
-  PRINTER_NAME: 'DYMO_LabelWriter_4XL'
+  PRINTER_NAME: 'DYMO_LabelWriter_4XL',
+  SERVICE: 'USPS',
+  LABEL_PATH: null
 }
 
 // load object
