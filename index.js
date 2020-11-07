@@ -3,7 +3,7 @@ var inquirer = require('inquirer')
 var _ = require('lodash')
 var request = Promise.promisify(require('request'))
 var { table } = require('table')
-var { createShipment, buyLabel } = require('./lib/easypost')
+var { createShipment, buyLabel, formatAddress } = require('./lib/easypost')
 var { printLabel } = require('./lib/print')
 var config = require('./config')
 
@@ -135,11 +135,7 @@ var confirmBuyAndUpdate = function (pack) {
         ],
         [
           `${record.email}`,
-          [
-            address.name,
-            _.compact([record.street1, record.street2]).join(', '),
-            `${record.city} ${record.state}, ${record.zip}`
-          ].join('\n'),
+          formatAddress(address),
           [
             `${rate.carrier} ${rate.service}`,
             `$${rate.rate}`
@@ -172,7 +168,9 @@ Promise
   .map(function (record) {
     return Promise.props({
       record: record,
-      shipment: createShipment(record, SERVICE, record.size)
+      shipment: createShipment(record, 'SWAG', {
+        message: record.size
+      })
     })
   }, {
     concurrency: 1
