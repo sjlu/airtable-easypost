@@ -2,10 +2,6 @@ var Promise = require('bluebird')
 var inquirer = require('inquirer')
 var _ = require('lodash')
 var request = Promise.promisify(require('request'))
-var fs = Promise.promisifyAll(require('fs'))
-var childProcess = require('child_process')
-var os = require('os')
-var path = require('path')
 var { table } = require('table')
 var { createShipment, buyLabel } = require('./lib/easypost')
 var { printLabel } = require('./lib/print')
@@ -163,31 +159,18 @@ var confirmBuyAndUpdate = function (pack) {
       if (prompts && prompts.confirm) {
         return buyAndUpdate(this.pack.record, this.pack.shipment)
       }
-
-      return
     })
 }
 
 Promise
-  .bind({
-    fromAddress: {
-      name: config.FROM_NAME,
-      company: config.FROM_COMPANY,
-      street1: config.FROM_STREET1,
-      street2: config.FROM_STREET2,
-      city: config.FROM_CITY,
-      state: config.FROM_STATE,
-      zip: config.FROM_ZIP,
-      country: config.FROM_COUNTRY
-    }
-  })
+  .bind({})
   .then(function () {
     return getSwagRecords()
   })
   .map(function (record) {
     return Promise.props({
       record: record,
-      shipment: createShipment(this.fromAddress, record, config.SERVICE, record.size)
+      shipment: createShipment(record, config.SERVICE, record.size)
     })
   }, {
     concurrency: 1

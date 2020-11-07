@@ -16,6 +16,8 @@ var config = {
   FROM_CITY: null,
   FROM_STATE: null,
   FROM_ZIP: null,
+  FROM_PHONE: null,
+  FROM_EMAIL: null,
   PRINTER_NAME: 'DYMO_LabelWriter_4XL',
   SERVICE: 'USPS',
   LABEL_PATH: null
