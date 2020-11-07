@@ -7,13 +7,15 @@ var { createShipment, buyLabel } = require('./lib/easypost')
 var { printLabel } = require('./lib/print')
 var config = require('./config')
 
+const SERVICE = 'USPS'
+
 var buyAndPrintShipmentLabel = function (shipment) {
   return Promise
     .bind({
       shipment
     })
     .then(function () {
-      return buyLabel(this.shipment, config.SERVICE)
+      return buyLabel(this.shipment, SERVICE)
     })
     .then(function (label) {
       this.label = label
@@ -122,7 +124,7 @@ var confirmBuyAndUpdate = function (pack) {
     })
     .then(function () {
       var record = this.pack.record
-      var rate = this.pack.shipment.lowestRate([config.SERVICE])
+      var rate = this.pack.shipment.lowestRate([SERVICE])
       var address = this.pack.shipment.to_address
 
       var tableData = [
@@ -170,7 +172,7 @@ Promise
   .map(function (record) {
     return Promise.props({
       record: record,
-      shipment: createShipment(record, config.SERVICE, record.size)
+      shipment: createShipment(record, SERVICE, record.size)
     })
   }, {
     concurrency: 1
