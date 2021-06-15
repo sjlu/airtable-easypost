@@ -56,6 +56,15 @@ Promise
         name: 'phone'
       },
       {
+        type: 'list',
+        name: 'box',
+        choices: [
+          'FEDEX_LAPTOP_BOX',
+          'APPLE_LAPTOP_BOX'
+        ],
+        loop: false
+      },
+      {
         type: 'confirm',
         name: 'signature',
         default: false
@@ -63,7 +72,7 @@ Promise
     ])
   })
   .then(function (address) {
-    return createShipment(address, 'LAPTOP', {
+    return createShipment(address, address.box, {
       signature: address.signature
     })
   })
