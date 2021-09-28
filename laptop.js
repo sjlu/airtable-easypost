@@ -3,8 +3,9 @@ var inquirer = require('inquirer')
 var _ = require('lodash')
 var moment = require('moment')
 var { table } = require('table')
-var { createShipment, buyLabel, formatAddress } = require('./lib/easypost')
+var { createShipment, createReverseShipment, buyLabel, formatAddress } = require('./lib/easypost')
 var { printLabel } = require('./lib/print')
+var fsCache = require('./lib/fs_cache')
 
 var formatDeliveryEst = function (rate) {
   var date = ''
@@ -26,43 +27,59 @@ var formatDeliveryEst = function (rate) {
 Promise
   .bind({})
   .then(function () {
+    return fsCache.get('laptop')
+  })
+  .then(function (cache = {}) {
     return inquirer.prompt([
       {
         type: 'input',
         name: 'name',
+        default: cache.name
       },
       {
         type: 'input',
-        name: 'street1'
+        name: 'street1',
+        default: cache.street1
       },
       {
         type: 'input',
-        name: 'city'
+        name: 'city',
+        default: cache.city
       },
       {
         type: 'input',
-        name: 'state'
+        name: 'state',
+        default: cache.state
       },
       {
         type: 'input',
-        name: 'zip'
+        name: 'zip',
+        default: cache.zip
       },
       {
         type: 'input',
-        name: 'email'
+        name: 'email',
+        default: cache.email
       },
       {
         type: 'input',
-        name: 'phone'
+        name: 'phone',
+        default: cache.phone
       },
       {
         type: 'list',
         name: 'box',
         choices: [
           'FEDEX_LAPTOP_BOX',
-          'APPLE_LAPTOP_BOX'
+          'APPLE_LAPTOP_BOX',
+          'APPLE_LAPTOP_BOX_EMPTY',
         ],
         loop: false
+      },
+      {
+        type: 'confirm',
+        name: 'reverse',
+        default: false
       },
       {
         type: 'confirm',
@@ -71,8 +88,12 @@ Promise
       }
     ])
   })
+  .tap(function (address) {
+    return fsCache.set('laptop', address, 3600000)
+  })
   .then(function (address) {
-    return createShipment(address, address.box, {
+    var fn = address.reverse ? createReverseShipment : createShipment
+    return fn(address, address.box, {
       signature: address.signature
     })
   })
@@ -188,5 +209,6 @@ Promise
   })
   .catch(function (err) {
     console.error(err)
+    console.log(err.error.error)
     console.log(err.errors)
   })
