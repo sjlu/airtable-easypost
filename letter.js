@@ -50,6 +50,12 @@ Promise
     ])
   })
   .then(function (address) {
+    var fn = address.reverse ? createReverseShipment : createShipment
+    return fn(address, address.box, {
+      signature: address.signature
+    })
+  })
+  .then(function (address) {
     return createShipment(address, 'LETTER')
   })
   .then(function (shipment) {

@@ -37,4 +37,4 @@ Prerequisite: Please have an Airtable account, EasyPost account, and Node.js ins
 
 ## License
 
-MIT
+MIT2

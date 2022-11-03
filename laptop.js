@@ -73,6 +73,8 @@ Promise
           'FEDEX_LAPTOP_BOX',
           'APPLE_LAPTOP_BOX',
           'APPLE_LAPTOP_BOX_EMPTY',
+          'LETTER',
+          'UPS_LETTER'
         ],
         loop: false
       },
@@ -99,6 +101,8 @@ Promise
   })
   .then(function (shipment) {
     this.shipment = shipment
+
+    console.log(this.shipment.rates)
 
     var rates = _.sortBy(this.shipment.rates, function (rate) {
       return _.parseInt(rate.rate)
